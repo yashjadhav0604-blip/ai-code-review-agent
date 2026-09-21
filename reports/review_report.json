@@ -1,0 +1,179 @@
+{
+    "timestamp": "2026-09-21T00:35:57.110123",
+    "file": ".\\sample_code\\example.py",
+    "summary": {
+        "total_findings": 5,
+        "critical": 1,
+        "high": 1,
+        "medium": 0,
+        "low": 3,
+        "ruff_findings": 2,
+        "bandit_findings": 2
+    },
+    "priority_summary": {
+        "total_findings": 5,
+        "critical": 1,
+        "high": 1,
+        "medium": 0,
+        "low": 3
+    },
+    "findings": [
+        {
+            "issue": "Hard‑coded password string",
+            "severity": "High",
+            "category": "Security",
+            "line": "3",
+            "explanation": "Storing a plaintext password in source code exposes credentials to anyone who can read the repository. This can lead to credential leakage and unauthorized access.",
+            "suggested_fix": "Remove the literal and obtain the password from a secure source (environment variable, secret manager, encrypted config, etc.). Example:"
+        },
+        {
+            "issue": "Possible SQL injection via string concatenation",
+            "severity": "Critical",
+            "category": "Security",
+            "line": "12",
+            "explanation": "The function builds an SQL statement by concatenating the `user_id` directly into the query string. If `user_id` contains malicious input, an attacker can manipulate the query and compromise the database.",
+            "suggested_fix": "Use parameterised queries (or an ORM) instead of string building. Example with `sqlite3`:"
+        },
+        {
+            "issue": "Unused import `os`",
+            "severity": "Low",
+            "category": "Code Quality / Style",
+            "line": "1",
+            "explanation": "The `os` module is imported but never referenced, adding unnecessary clutter and a tiny import overhead.",
+            "suggested_fix": "Delete the line `import os` or use the module if it is needed elsewhere."
+        },
+        {
+            "issue": "Unused local variable `y`",
+            "severity": "Low",
+            "category": "Code Quality",
+            "line": "18",
+            "explanation": "Variable `y` is assigned a value that is never read, indicating dead code or a possible mistake.",
+            "suggested_fix": "Remove the assignment (`y = 20`) or use the variable if it has a purpose."
+        },
+        {
+            "issue": "Unused function `unused_function`",
+            "severity": "Low",
+            "category": "Code Quality",
+            "line": "16",
+            "explanation": "The function is defined but never called, increasing the maintenance surface and potentially confusing readers.",
+            "suggested_fix": "Delete the function if it is not required, or integrate it where needed and ensure all internal variables are used."
+        }
+    ],
+    "static_analysis": {
+        "ruff": [
+            {
+                "cell": null,
+                "code": "F401",
+                "end_location": {
+                    "column": 10,
+                    "row": 1
+                },
+                "filename": "C:\\Users\\YASH\\OneDrive\\Desktop\\ai-code-review-agent\\sample_code\\example.py",
+                "fix": {
+                    "applicability": "safe",
+                    "edits": [
+                        {
+                            "content": "",
+                            "end_location": {
+                                "column": 1,
+                                "row": 2
+                            },
+                            "location": {
+                                "column": 1,
+                                "row": 1
+                            }
+                        }
+                    ],
+                    "message": "Remove unused import: `os`"
+                },
+                "location": {
+                    "column": 8,
+                    "row": 1
+                },
+                "message": "`os` imported but unused",
+                "name": "unused-import",
+                "noqa_row": 1,
+                "severity": "error",
+                "url": "https://docs.astral.sh/ruff/rules/unused-import"
+            },
+            {
+                "cell": null,
+                "code": "F841",
+                "end_location": {
+                    "column": 6,
+                    "row": 18
+                },
+                "filename": "C:\\Users\\YASH\\OneDrive\\Desktop\\ai-code-review-agent\\sample_code\\example.py",
+                "fix": {
+                    "applicability": "unsafe",
+                    "edits": [
+                        {
+                            "content": "",
+                            "end_location": {
+                                "column": 1,
+                                "row": 19
+                            },
+                            "location": {
+                                "column": 1,
+                                "row": 18
+                            }
+                        }
+                    ],
+                    "message": "Remove assignment to unused variable `y`"
+                },
+                "location": {
+                    "column": 5,
+                    "row": 18
+                },
+                "message": "Local variable `y` is assigned to but never used",
+                "name": "unused-variable",
+                "noqa_row": 18,
+                "severity": "error",
+                "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+            }
+        ],
+        "bandit": [
+            {
+                "code": "2 \n3 password = \"admin123\"\n4 \n",
+                "col_offset": 11,
+                "end_col_offset": 21,
+                "filename": ".\\.\\sample_code\\example.py",
+                "issue_confidence": "MEDIUM",
+                "issue_cwe": {
+                    "id": 259,
+                    "link": "https://cwe.mitre.org/data/definitions/259.html"
+                },
+                "issue_severity": "LOW",
+                "issue_text": "Possible hardcoded password: 'admin123'",
+                "line_number": 3,
+                "line_range": [
+                    3
+                ],
+                "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b105_hardcoded_password_string.html",
+                "test_id": "B105",
+                "test_name": "hardcoded_password_string"
+            },
+            {
+                "code": "11 def get_user_data(user_id):\n12     query = \"SELECT * FROM users WHERE id = \" + user_id\n13     return query\n",
+                "col_offset": 12,
+                "end_col_offset": 45,
+                "filename": ".\\.\\sample_code\\example.py",
+                "issue_confidence": "LOW",
+                "issue_cwe": {
+                    "id": 89,
+                    "link": "https://cwe.mitre.org/data/definitions/89.html"
+                },
+                "issue_severity": "MEDIUM",
+                "issue_text": "Possible SQL injection vector through string-based query construction.",
+                "line_number": 12,
+                "line_range": [
+                    12
+                ],
+                "more_info": "https://bandit.readthedocs.io/en/1.9.4/plugins/b608_hardcoded_sql_expressions.html",
+                "test_id": "B608",
+                "test_name": "hardcoded_sql_expressions"
+            }
+        ]
+    },
+    "ai_review": "## CODE REVIEW FINDINGS\n\n### Finding 1\n**Issue:** Hard‑coded password string  \n**Severity:** High  \n**Category:** Security  \n**Line:** 3  \n**Explanation:** Storing a plaintext password in source code exposes credentials to anyone who can read the repository. This can lead to credential leakage and unauthorized access.  \n**Suggested Fix:** Remove the literal and obtain the password from a secure source (environment variable, secret manager, encrypted config, etc.). Example:  \n\n```python\nimport os\n\npassword = os.getenv(\"APP_PASSWORD\")  # raise error if not set\n```\n\n---\n\n### Finding 2\n**Issue:** Possible SQL injection via string concatenation  \n**Severity:** Critical  \n**Category:** Security  \n**Line:** 12  \n**Explanation:** The function builds an SQL statement by concatenating the `user_id` directly into the query string. If `user_id` contains malicious input, an attacker can manipulate the query and compromise the database.  \n**Suggested Fix:** Use parameterised queries (or an ORM) instead of string building. Example with `sqlite3`:\n\n```python\nimport sqlite3\n\ndef get_user_data(conn: sqlite3.Connection, user_id: str):\n    cursor = conn.cursor()\n    cursor.execute(\"SELECT * FROM users WHERE id = ?\", (user_id,))\n    return cursor.fetchall()\n```\n\nReturn the fetched data rather than the raw query string.\n\n---\n\n### Finding 3\n**Issue:** Unused import `os`  \n**Severity:** Low  \n**Category:** Code Quality / Style  \n**Line:** 1  \n**Explanation:** The `os` module is imported but never referenced, adding unnecessary clutter and a tiny import overhead.  \n**Suggested Fix:** Delete the line `import os` or use the module if it is needed elsewhere.\n\n---\n\n### Finding 4\n**Issue:** Unused local variable `y`  \n**Severity:** Low  \n**Category:** Code Quality  \n**Line:** 18  \n**Explanation:** Variable `y` is assigned a value that is never read, indicating dead code or a possible mistake.  \n**Suggested Fix:** Remove the assignment (`y = 20`) or use the variable if it has a purpose.\n\n---\n\n### Finding 5\n**Issue:** Unused function `unused_function`  \n**Severity:** Low  \n**Category:** Code Quality  \n**Line:** 16  \n**Explanation:** The function is defined but never called, increasing the maintenance surface and potentially confusing readers.  \n**Suggested Fix:** Delete the function if it is not required, or integrate it where needed and ensure all internal variables are used.\n\n---\n\n## SUMMARY\n\n| Severity | Count |\n|----------|-------|\n| Critical | 1 |\n| High     | 1 |\n| Medium   | 0 |\n| Low      | 3 |\n| **Total Findings** | **5** |\n\n## RECOMMENDED ACTIONS\n\n1. **Fix the SQL injection vulnerability** – rewrite `get_user_data` to use parameterised queries (Critical).  \n2. **Eliminate hard‑coded credentials** – move the password out of source code into a secure secret store or environment variable (High).  \n3. **Clean up dead code** – remove the unused `os` import, the unused variable `y`, and the unused `unused_function` (Low).  \n\nAddressing the security issues first will protect the application from exploitation; the remaining clean‑up steps improve maintainability and readability."
+}
